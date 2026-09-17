@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LeatherCraft Designer - Design Leather Products Your Way{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container hero-container">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                <span>The Digital Workshop for Leather Artisans</span>
+            </div>
+            <h1 class="hero-title">Design Leather Products <span class="text-highlight">Your Way</span></h1>
+            <p class="hero-description">
+                LeatherCraft Designer is a dedicated web platform built to help small leather entrepreneurs, independent crafters, and boutique workshops design, customize, and cost bespoke leather articles effortlessly.
+            </p>
+            <div class="hero-actions">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg" id="hero-cta-primary">
+                    <span>Start Designing</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                <a href="{% url 'about' %}" class="btn btn-outline btn-lg" id="hero-cta-secondary">
+                    <span>Learn More</span>
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">6+</span>
+                    <span class="stat-label">Core Article Types</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Web-Based Solution</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">Phase 1</span>
+                    <span class="stat-label">Stable Foundation</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="craft-preview-card">
+                <div class="preview-header">
+                    <div class="preview-dots">
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-green"></span>
+                    </div>
+                    <span class="preview-title">Workshop Canvas Studio</span>
+                </div>
+                <div class="preview-body">
+                    <div class="mockup-leather-piece">
+                        <div class="leather-texture-overlay"></div>
+                        <div class="stitch-border"></div>
+                        <div class="mockup-elements">
+                            <div class="mockup-pocket"></div>
+                            <div class="mockup-crease"></div>
+                            <div class="mockup-stamp">LEATHERCRAFT</div>
+                        </div>
+                    </div>
+                    <div class="mockup-tools-row">
+                        <span class="tool-tag"><i class="tag-bullet"></i> Vegetable-Tanned</span>
+                        <span class="tool-tag"><i class="tag-bullet"></i> Saddle Stitch</span>
+                        <span class="tool-tag"><i class="tag-bullet"></i> Brass Hardware</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section" id="features">
+    <div class="container">
+        <div class="section-header text-center">
+            <span class="section-badge">Platform Capabilities</span>
+            <h2 class="section-title">Everything You Need to Design &amp; Craft</h2>
+            <p class="section-subtitle">
+                Streamline your bespoke leathercraft workflow from initial dimensions to material budgeting.
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <!-- Feature 1 -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    </svg>
+                </div>
+                <h3 class="feature-card-title">Customize Designs</h3>
+                <p class="feature-card-text">
+                    Adjust article dimensions, select premium leather temperaments, configure inner card pockets, and choose thread weights suited to your craft style.
+                </p>
+                <div class="feature-card-status">Upcoming in Phase 3</div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </div>
+                <h3 class="feature-card-title">Preview Your Product</h3>
+                <p class="feature-card-text">
+                    Get an instant multi-angle visual simulation showing folded, unfolded, and internal cutaway views with natural grain highlights.
+                </p>
+                <div class="feature-card-status">Upcoming in Phase 4</div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                </div>
+                <h3 class="feature-card-title">Save Your Designs</h3>
+                <p class="feature-card-text">
+                    Organize your bespoke templates, preserve past client specifications, and build a reusable digital pattern library for repeat orders.
+                </p>
+                <div class="feature-card-status">Upcoming in Phase 3</div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <h3 class="feature-card-title">Estimate Costs</h3>
+                <p class="feature-card-text">
+                    Automatically compute square-footage hide consumption, wastage margins, hardware fixtures, and workshop hours for accurate client pricing.
+                </p>
+                <div class="feature-card-status">Upcoming in Phase 5</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Supported Articles Section -->
+<section class="articles-section" id="articles">
+    <div class="container">
+        <div class="section-header text-center">
+            <span class="section-badge">Supported Products</span>
+            <h2 class="section-title">Tailored for Essential Leather Goods</h2>
+            <p class="section-subtitle">
+                Explore the range of artisan articles designed for custom configuration.
+            </p>
+        </div>
+
+        <div class="articles-grid">
+            <!-- Article 1: Wallets -->
+            <div class="article-card">
+                <div class="article-card-media article-wallet">
+                    <div class="article-badge">Popular</div>
+                    <div class="leather-silhouette silhouette-wallet"></div>
+                </div>
+                <div class="article-card-content">
+                    <h3 class="article-title">Wallets</h3>
+                    <p class="article-desc">
+                        Classic bifold, trifold, and minimalist front-pocket wallets with customizable cash slots and edge finishes.
+                    </p>
+                    <ul class="article-specs">
+                        <li>Bifold &amp; Trifold Layouts</li>
+                        <li>Configurable Card Slots</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Article 2: Belts -->
+            <div class="article-card">
+                <div class="article-card-media article-belt">
+                    <div class="article-badge">Classic</div>
+                    <div class="leather-silhouette silhouette-belt"></div>
+                </div>
+                <div class="article-card-content">
+                    <h3 class="article-title">Belts</h3>
+                    <p class="article-desc">
+                        Dress belts, heavy-duty utility belts, and casual straps with custom buckle hardware and punch hole spacing.
+                    </p>
+                    <ul class="article-specs">
+                        <li>Adjustable Width &amp; Length</li>
+                        <li>Single/Double Prong Hardware</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Article 3: Handbags -->
+            <div class="article-card">
+                <div class="article-card-media article-handbag">
+                    <div class="article-badge">Complex</div>
+                    <div class="leather-silhouette silhouette-handbag"></div>
+                </div>
+                <div class="article-card-content">
+                    <h3 class="article-title">Handbags</h3>
+                    <p class="article-desc">
+                        Totes, crossbody satchels, and structured clutches with gusset geometry, liner fabrics, and zipper options.
+                    </p>
+                    <ul class="article-specs">
+                        <li>Gusset &amp; Base Dimensioning</li>
+                        <li>Strap Drop Customization</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Article 4: Card Holders -->
+            <div class="article-card">
+                <div class="article-card-media article-cardholder">
+                    <div class="article-badge">Essential</div>
+                    <div class="leather-silhouette silhouette-cardholder"></div>
+                </div>
+                <div class="article-card-content">
+                    <h3 class="article-title">Card Holders</h3>
+                    <p class="article-desc">
+                        Ultra-slim card sleeves, accordion cases, and vertical badge holders with thumb-slide cutouts.
+                    </p>
+                    <ul class="article-specs">
+                        <li>Ultra-slim Profile Layout</li>
+                        <li>Quick-Access Thumb Cutouts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Article 5: Keychains -->
+            <div class="article-card">
+                <div class="article-card-media article-keychain">
+                    <div class="article-badge">Accessory</div>
+                    <div class="leather-silhouette silhouette-keychain"></div>
+                </div>
+                <div class="article-card-content">
+                    <h3 class="article-title">Keychains</h3>
+                    <p class="article-desc">
+                        Valet key fobs, snap-hook lanyard loops, and brass rivet accessories for quick workshop projects.
+                    </p>
+                    <ul class="article-specs">
+                        <li>Hardware Clip Options</li>
+                        <li>Foil Stamping Areas</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Article 6: Pouches -->
+            <div class="article-card">
+                <div class="article-card-media article-pouch">
+                    <div class="article-badge">Versatile</div>
+                    <div class="leather-silhouette silhouette-pouch"></div>
+                </div>
+                <div class="article-card-content">
+                    <h3 class="article-title">Pouches</h3>
+                    <p class="article-desc">
+                        Zippered toiletry dopp kits, coin pouches, slip covers, and tool rolls crafted to bespoke dimensions.
+                    </p>
+                    <ul class="article-specs">
+                        <li>Flat &amp; Boxed Gussets</li>
+                        <li>Heavy-Duty Brass Zippers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Simple CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-card">
+            <div class="cta-content">
+                <span class="section-badge badge-light">Start Your Digital Workshop</span>
+                <h2 class="cta-title">Ready to Transform Your Leather Product Designs?</h2>
+                <p class="cta-description">
+                    Take the guesswork out of leather dimensioning, pattern drafting, and material costing. Join our growing community of leather artisans.
+                </p>
+                <div class="cta-buttons">
+                    <a href="{% url 'register' %}" class="btn btn-accent btn-lg" id="cta-get-started">Get Started Today</a>
+                    <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg" id="cta-learn-platform">Explore Platform Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About - LeatherCraft Designer{% endblock %}
+
+{% block content %}
+<!-- About Hero -->
+<section class="page-header-section">
+    <div class="container text-center">
+        <span class="section-badge">Platform Overview</span>
+        <h1 class="page-header-title">About LeatherCraft Designer</h1>
+        <p class="page-header-subtitle">
+            A specialized web-based design solution engineered to empower small leather entrepreneurs, independent crafters, and bespoke ateliers.
+        </p>
+    </div>
+</section>
+
+<!-- Main About Content -->
+<section class="about-content-section">
+    <div class="container">
+        <!-- Section 1: What is LeatherCraft Designer -->
+        <div class="about-grid-row">
+            <div class="about-text-col">
+                <span class="about-step-label">Introduction</span>
+                <h2 class="about-section-heading">What is LeatherCraft Designer?</h2>
+                <p class="about-paragraph">
+                    <strong>LeatherCraft Designer</strong> is a dedicated web application created specifically for the leathercraft community. It brings digital design precision, pattern configurability, and material estimation to leather artisans who currently rely on manual pen-and-paper drafting or generic CAD tools that are too complicated and expensive.
+                </p>
+                <p class="about-paragraph">
+                    Whether you are an independent artisan operating a boutique workshop, a leather hobbyist scaling into a commercial enterprise, or a custom order maker, LeatherCraft Designer provides a straightforward and visual way to configure leather goods.
+                </p>
+            </div>
+            <div class="about-card-col">
+                <div class="info-highlight-card">
+                    <div class="info-card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
+                    <h3 class="info-card-title">Craft-Centric Philosophy</h3>
+                    <p class="info-card-desc">
+                        Designed with authentic leathercraft principles in mind: grain orientation, leather temper, edge allowances, stitch per inch (SPI) counts, and hardware fitting clearances.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: The Problem We Solve -->
+        <div class="about-grid-row reverse-row">
+            <div class="about-text-col">
+                <span class="about-step-label">The Challenge</span>
+                <h2 class="about-section-heading">The Problem We Solve for Leather Artisans</h2>
+                <p class="about-paragraph">
+                    Small leather entrepreneurs face unique operational and design hurdles every day:
+                </p>
+                <ul class="about-feature-list">
+                    <li>
+                        <strong>Manual Sketching &amp; Paper Templates:</strong> Physical card stock patterns degrade over time and require cumbersome manual recalculations when adjusting dimensions.
+                    </li>
+                    <li>
+                        <strong>Costing Guesswork:</strong> Irregular hide shapes make calculating exact square-footage consumption and wastage margins difficult, leading to misquoted client pricing.
+                    </li>
+                    <li>
+                        <strong>Inefficient Client Approvals:</strong> Communicating custom dimensions, stitch colors, and leather finishes to clients through text descriptions often leads to misaligned expectations.
+                    </li>
+                    <li>
+                        <strong>Scattered Order Data:</strong> Custom specifications and past pattern modifications are often lost in paper notebooks instead of a centralized digital archive.
+                    </li>
+                </ul>
+            </div>
+            <div class="about-card-col">
+                <div class="problem-solution-card">
+                    <div class="card-tag">Core Value</div>
+                    <h4 class="card-highlight-title">From Guesswork to Precision</h4>
+                    <p class="card-highlight-text">
+                        By integrating article dimensioning with real-time visual previews and material cost estimators, small makers can quote accurately and build with complete confidence.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: How the Application Helps -->
+        <div class="about-grid-row">
+            <div class="about-text-col">
+                <span class="about-step-label">The Solution</span>
+                <h2 class="about-section-heading">How LeatherCraft Designer Helps You</h2>
+                <p class="about-paragraph">
+                    The platform enables small leather business owners to scale their creative output through a unified, 4-step digital workflow:
+                </p>
+                <div class="workflow-steps">
+                    <div class="workflow-step-card">
+                        <span class="step-num">01</span>
+                        <h4 class="step-title">Select &amp; Customize</h4>
+                        <p class="step-desc">Choose from essential article templates (wallets, belts, handbags, pouches) and customize measurements, pockets, and stitching.</p>
+                    </div>
+                    <div class="workflow-step-card">
+                        <span class="step-num">02</span>
+                        <h4 class="step-title">Interactive Visual Preview</h4>
+                        <p class="step-desc">Examine simulated leather grain, edge painting, and brass hardware in multi-panel visual views.</p>
+                    </div>
+                    <div class="workflow-step-card">
+                        <span class="step-num">03</span>
+                        <h4 class="step-title">Automated Cost Estimates</h4>
+                        <p class="step-desc">Calculate required square feet of leather, thread, rivets, zippers, and labor rates in seconds.</p>
+                    </div>
+                    <div class="workflow-step-card">
+                        <span class="step-num">04</span>
+                        <h4 class="step-title">Save &amp; Export</h4>
+                        <p class="step-desc">Save bespoke project files to your workshop account and export clean dimensional specs for workshop cutting.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Modern Web-Based Solution -->
+        <div class="web-solution-banner">
+            <div class="banner-inner">
+                <div class="banner-icon">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                </div>
+                <div class="banner-text">
+                    <h3 class="banner-title">Modern, Zero-Install Web Platform</h3>
+                    <p class="banner-desc">
+                        LeatherCraft Designer is being actively developed as a full-featured web-based software application built on the stable Django framework. Run it smoothly on any desktop, laptop, or tablet in your workshop without installing bulky CAD packages.
+                    </p>
+                </div>
+                <div class="banner-action">
+                    <a href="{% url 'home' %}" class="btn btn-primary">Return to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
