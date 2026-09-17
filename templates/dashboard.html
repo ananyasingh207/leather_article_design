@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Artisan Dashboard - LeatherCraft Designer{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="container">
+        <!-- Dashboard Header / Welcome Banner -->
+        <div class="dashboard-header-card">
+            <div class="header-user-info">
+                <div class="user-avatar-large">
+                    <span>{{ user_name|slice:":1"|upper }}</span>
+                </div>
+                <div class="user-welcome-text">
+                    <span class="user-welcome-badge">Artisan Workspace</span>
+                    <h1 class="user-welcome-title">Welcome, {{ user_name }}!</h1>
+                    <p class="user-welcome-sub">Manage your custom leather articles, saved templates, and estimation projects.</p>
+                </div>
+            </div>
+            <div class="header-action-buttons">
+                <button type="button" class="btn btn-primary btn-lg" id="btn-create-design" onclick="alert('Design Studio Canvas will be activated in Phase 4.');">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Create New Design</span>
+                </button>
+                <a href="{% url 'profile' %}" class="btn btn-outline btn-lg" id="btn-view-profile">View Profile</a>
+            </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="dashboard-stats-grid">
+            <!-- Stat 1: My Designs -->
+            <div class="dashboard-stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">My Designs</span>
+                    <div class="stat-icon-wrapper stat-icon-amber">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-card-value">{{ my_designs_count }}</div>
+                <p class="stat-card-meta">Saved CAD/canvas patterns (Phase 3)</p>
+            </div>
+
+            <!-- Stat 2: Saved Articles -->
+            <div class="dashboard-stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Saved Articles</span>
+                    <div class="stat-icon-wrapper stat-icon-leather">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-card-value">{{ saved_articles_count }}</div>
+                <p class="stat-card-meta">Configured product items (Phase 3)</p>
+            </div>
+
+            <!-- Stat 3: Cost Estimates -->
+            <div class="dashboard-stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Cost Calculations</span>
+                    <div class="stat-icon-wrapper stat-icon-sand">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-card-value">0</div>
+                <p class="stat-card-meta">Automated yield quotes (Phase 5)</p>
+            </div>
+        </div>
+
+        <!-- Recent Projects Placeholder -->
+        <div class="dashboard-content-panel">
+            <div class="panel-header">
+                <h3 class="panel-title">Recent Design Projects</h3>
+                <span class="panel-badge">Phase 2 Active</span>
+            </div>
+            <div class="empty-state-box">
+                <div class="empty-state-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                </div>
+                <h4 class="empty-state-title">No Designs Created Yet</h4>
+                <p class="empty-state-desc">Your customized leather articles, wallet configurations, and belt patterns will appear here once the Design Studio module is launched in Phase 3 &amp; 4.</p>
+                <div class="empty-state-actions">
+                    <a href="{% url 'about' %}" class="btn btn-outline btn-sm">Explore Capabilities</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

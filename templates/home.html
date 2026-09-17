@@ -17,13 +17,23 @@
                 LeatherCraft Designer is a dedicated web platform built to help small leather entrepreneurs, independent crafters, and boutique workshops design, customize, and cost bespoke leather articles effortlessly.
             </p>
             <div class="hero-actions">
-                <a href="{% url 'login' %}" class="btn btn-primary btn-lg" id="hero-cta-primary">
+                {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg" id="hero-cta-primary">
+                    <span>Go to Dashboard</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                {% else %}
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg" id="hero-cta-primary">
                     <span>Start Designing</span>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                         <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
                 </a>
+                {% endif %}
                 <a href="{% url 'about' %}" class="btn btn-outline btn-lg" id="hero-cta-secondary">
                     <span>Learn More</span>
                 </a>
@@ -287,7 +297,11 @@
                     Take the guesswork out of leather dimensioning, pattern drafting, and material costing. Join our growing community of leather artisans.
                 </p>
                 <div class="cta-buttons">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn btn-accent btn-lg" id="cta-get-started">Open My Dashboard</a>
+                    {% else %}
                     <a href="{% url 'register' %}" class="btn btn-accent btn-lg" id="cta-get-started">Get Started Today</a>
+                    {% endif %}
                     <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg" id="cta-learn-platform">Explore Platform Details</a>
                 </div>
             </div>

@@ -19,52 +19,50 @@
                 <p class="auth-subtitle">Sign in to access your leather design workspace</p>
             </div>
 
-            <!-- Phase 1 Notice Banner -->
-            <div class="phase-notice-banner" role="status">
-                <span class="notice-icon">&#9432;</span>
-                <div class="notice-body">
-                    <strong>Phase 1 Preview</strong>
-                    <p>This is a placeholder login screen. Full user authentication and session management will be activated in Phase 2.</p>
-                </div>
+            <!-- Non-field / Top-level Form Errors -->
+            {% if form.non_field_errors %}
+            <div class="alert alert-error mb-4" role="alert">
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
             </div>
+            {% endif %}
 
-            <form class="auth-form" id="loginForm" method="post" action="#" onsubmit="event.preventDefault(); document.getElementById('formFeedback').style.display='block';">
+            <form class="auth-form" id="loginForm" method="post" action="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" novalidate>
                 {% csrf_token %}
                 
                 <div class="form-group">
-                    <label for="id_username_or_email" class="form-label">Email or Username</label>
+                    <label for="id_email" class="form-label">Email Address</label>
                     <div class="input-wrapper">
                         <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                             <polyline points="22,6 12,13 2,6"></polyline>
                         </svg>
-                        <input type="text" id="id_username_or_email" name="username_or_email" class="form-control" placeholder="artisan@leathercraft.com" required>
+                        {{ form.email }}
                     </div>
+                    {% if form.email.errors %}
+                    <div class="field-error">
+                        {% for error in form.email.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group">
                     <div class="form-label-row">
                         <label for="id_password" class="form-label">Password</label>
-                        <a href="#" class="form-helper-link" onclick="alert('Password reset will be available in Phase 2.'); return false;">Forgot password?</a>
                     </div>
                     <div class="input-wrapper">
                         <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
-                        <input type="password" id="id_password" name="password" class="form-control" placeholder="••••••••••••" required>
+                        {{ form.password }}
                     </div>
-                </div>
-
-                <div class="form-group-checkbox">
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="remember_me" class="custom-checkbox">
-                        <span>Remember my device</span>
-                    </label>
-                </div>
-
-                <div id="formFeedback" class="form-feedback alert-info" style="display: none;">
-                    Phase 1 Notice: Form submission simulated successfully. Authentication backend is scheduled for Phase 2.
+                    {% if form.password.errors %}
+                    <div class="field-error">
+                        {% for error in form.password.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-login-submit">

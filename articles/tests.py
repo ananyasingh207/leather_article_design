@@ -39,7 +39,7 @@ class Phase1RoutesTestCase(TestCase):
         self.assertTemplateUsed(response, 'base.html')
         self.assertTemplateUsed(response, 'auth/login.html')
         self.assertContains(response, 'Welcome Back')
-        self.assertContains(response, 'Phase 1 Preview')
+        self.assertContains(response, 'Email Address')
 
     def test_register_page_status_and_content(self):
         url = reverse('register')
@@ -49,4 +49,5 @@ class Phase1RoutesTestCase(TestCase):
         self.assertTemplateUsed(response, 'auth/register.html')
         self.assertContains(response, 'Create an Account')
         self.assertContains(response, 'Full Name')
+
 

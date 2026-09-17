@@ -47,15 +47,48 @@
                     <li class="nav-item">
                         <a href="{% url 'about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" id="nav-link-about">About</a>
                     </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" id="nav-link-dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" id="nav-link-profile">Profile</a>
+                    </li>
+                    {% endif %}
                 </ul>
 
                 <div class="nav-actions">
+                    {% if user.is_authenticated %}
+                    <div class="user-greeting">
+                        <span class="greeting-icon">👤</span>
+                        <span class="greeting-name">{{ user.first_name|default:user.username }}</span>
+                    </div>
+                    <a href="{% url 'logout' %}" class="btn btn-outline btn-sm" id="nav-btn-logout">Logout</a>
+                    {% else %}
                     <a href="{% url 'login' %}" class="btn btn-outline btn-sm {% if request.resolver_match.url_name == 'login' %}active{% endif %}" id="nav-btn-login">Login</a>
                     <a href="{% url 'register' %}" class="btn btn-primary btn-sm {% if request.resolver_match.url_name == 'register' %}active{% endif %}" id="nav-btn-register">Register</a>
+                    {% endif %}
                 </div>
             </div>
         </nav>
     </header>
+
+    <!-- Global Messages Container -->
+    {% if messages %}
+    <div class="messages-container container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible" role="alert">
+            <span class="alert-icon">
+                {% if message.tags == 'success' %}✓
+                {% elif message.tags == 'error' or message.tags == 'danger' %}✕
+                {% else %}ℹ{% endif %}
+            </span>
+            <span class="alert-text">{{ message }}</span>
+            <button type="button" class="alert-close" onclick="this.parentElement.remove();" aria-label="Close notification">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <!-- Main Content -->
     <main id="main-content" class="main-layout">
@@ -80,7 +113,7 @@
                 <p class="footer-desc">
                     Empowering leather artisans, craftsmen, and small enterprise workshops with smart digital design and precise estimation tools.
                 </p>
-                <div class="footer-badge">Phase 1 Foundation Release</div>
+                <div class="footer-badge">Django Authentication Active</div>
             </div>
 
             <div class="footer-links-col">
@@ -88,8 +121,14 @@
                 <ul class="footer-nav-list">
                     <li><a href="{% url 'home' %}">Home</a></li>
                     <li><a href="{% url 'about' %}">About Platform</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
                     <li><a href="{% url 'login' %}">User Login</a></li>
                     <li><a href="{% url 'register' %}">Create Account</a></li>
+                    {% endif %}
                 </ul>
             </div>
 
