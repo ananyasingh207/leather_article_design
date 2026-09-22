@@ -63,16 +63,23 @@ def logout_view(request):
     return redirect('home')
 
 
+from designs.models import Design
+
+
 @login_required(login_url='login')
 def dashboard_view(request):
     """
     Protected dashboard for authenticated artisans.
-    Displays placeholder counts for designs and saved articles.
+    Displays dynamic counts for designs, saved article templates, and recent design projects.
     """
+    user_designs = Design.objects.filter(user=request.user).select_related('article')
+    recent_designs = user_designs[:6]
+
     context = {
         'user_name': request.user.first_name or request.user.username,
-        'my_designs_count': 0,
-        'saved_articles_count': 0,
+        'my_designs_count': user_designs.count(),
+        'saved_articles_count': user_designs.values('article').distinct().count(),
+        'recent_designs': recent_designs,
     }
     return render(request, 'dashboard.html', context)
 

@@ -12,6 +12,7 @@ urlpatterns = [
     path('', home_view, name='home'),
     path('about/', about_view, name='about'),
     path('articles/', include('articles.urls')),
+    path('designs/', include('designs.urls')),
     path('', include('accounts.urls')),
 ]
 

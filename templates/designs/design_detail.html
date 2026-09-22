@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ design.name }} - Design Details - LeatherCraft Designer{% endblock %}
+
+{% block content %}
+<section class="design-detail-section">
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <nav class="detail-breadcrumb" aria-label="Breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="{% url 'article_list' %}">Article Catalog</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="{% url 'article_detail' design.article.id %}">{{ design.article.name }}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">{{ design.name }}</span>
+        </nav>
+
+        <!-- Design Details Main Container -->
+        <div class="design-detail-card">
+            <!-- Header Banner -->
+            <div class="design-detail-header">
+                <div class="header-left">
+                    <div class="detail-badge-group">
+                        <span class="detail-badge-category">{{ design.article.category }}</span>
+                        <span class="detail-badge-status status-saved">Saved Custom Design</span>
+                    </div>
+                    <h1 class="design-title-large">{{ design.name }}</h1>
+                    <p class="design-meta-sub">
+                        Configured for <strong>{{ design.article.name }}</strong> &bull; Created on {{ design.created_at|date:"F d, Y - H:i" }} UTC
+                    </p>
+                </div>
+                <div class="header-actions">
+                    <a href="{% url 'design_create' design.article.id %}" class="btn btn-outline btn-md" id="btn-reconfigure">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                        <span>Design Another</span>
+                    </a>
+                    <a href="{% url 'article_list' %}" class="btn btn-primary btn-md" id="btn-browse-catalog">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                        <span>Browse Catalog</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Two-Column Specifications & Preview Layout -->
+            <div class="design-detail-grid">
+                <!-- Left: Full Specification Sheets -->
+                <div class="design-specs-col">
+                    <!-- Specification Block 1: Base Template & Leather -->
+                    <div class="specs-panel">
+                        <h3 class="specs-panel-title">Leather &amp; Material Specifications</h3>
+                        <div class="specs-table-rows">
+                            <div class="spec-item">
+                                <span class="spec-label">Base Article Template</span>
+                                <span class="spec-value">
+                                    <a href="{% url 'article_detail' design.article.id %}" class="link-highlight">{{ design.article.name }}</a>
+                                </span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Product Category</span>
+                                <span class="spec-value">{{ design.article.category }}</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Selected Leather Type</span>
+                                <span class="spec-value font-medium">{{ design.leather_type }}</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Leather Dye / Color</span>
+                                <span class="spec-value">
+                                    <span class="color-dot-indicator color-dot-{{ design.leather_color|slugify }}"></span>
+                                    {{ design.leather_color }}
+                                </span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Surface Finish</span>
+                                <span class="spec-value">{{ design.leather_finish }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Specification Block 2: Dimensions -->
+                    <div class="specs-panel">
+                        <h3 class="specs-panel-title">Dimensional Measurements</h3>
+                        <div class="specs-table-rows">
+                            <div class="spec-item">
+                                <span class="spec-label">Width</span>
+                                <span class="spec-value">{{ design.width }} cm</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Height</span>
+                                <span class="spec-value">{{ design.height }} cm</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Depth</span>
+                                <span class="spec-value">{{ design.depth }} cm</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Specification Block 3: Stitching & Embossing -->
+                    <div class="specs-panel">
+                        <h3 class="specs-panel-title">Embellishment &amp; Typography</h3>
+                        <div class="specs-table-rows">
+                            <div class="spec-item">
+                                <span class="spec-label">Stitching Color</span>
+                                <span class="spec-value">
+                                    <span class="color-dot-indicator color-dot-stitch-{{ design.stitching_color|slugify }}"></span>
+                                    {{ design.stitching_color }}
+                                </span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Embossed Custom Text</span>
+                                <span class="spec-value font-mono">
+                                    {% if design.custom_text %}
+                                    "{{ design.custom_text }}"
+                                    {% else %}
+                                    <em class="text-muted">None (Plain surface)</em>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Font Typography</span>
+                                <span class="spec-value">{{ design.font }}</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Font Size</span>
+                                <span class="spec-value">{{ design.text_size }} pt</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Owner / Artisan</span>
+                                <span class="spec-value">{{ design.user.username }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Visual Preview Representation -->
+                <div class="design-preview-col">
+                    <div class="specs-panel">
+                        <h3 class="specs-panel-title">Design Preview Representation</h3>
+                        
+                        <div class="detail-preview-box">
+                            <div class="leather-swatch-piece swatch-leather-{{ design.leather_color|slugify }} swatch-finish-{{ design.leather_finish|slugify }}">
+                                <div class="stitching-border-frame frame-stitch-{{ design.stitching_color|slugify }}">
+                                    <div class="swatch-watermark">
+                                        <span>{{ design.article.category|upper }}</span>
+                                    </div>
+                                    <div class="swatch-emboss-text font-family-{{ design.font|slugify }}" style="font-size: {{ design.text_size }}px;">
+                                        {% if design.custom_text %}
+                                        {{ design.custom_text }}
+                                        {% else %}
+                                        <span class="text-muted" style="font-size: 14px; opacity: 0.5;">[ NO EMBOSSED TEXT ]</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reference Article Thumbnail -->
+                        <div class="detail-reference-box">
+                            <span class="reference-box-label">Base Article Template:</span>
+                            <div class="reference-mini-card">
+                                {% if design.article.image %}
+                                <img src="{{ design.article.image.url }}" alt="{{ design.article.name }}" class="mini-art-img">
+                                {% else %}
+                                <div class="mini-silhouette-box">
+                                    {% if design.article.category == 'Wallets' %}
+                                    <div class="leather-silhouette silhouette-wallet silhouette-small"></div>
+                                    {% elif design.article.category == 'Belts' %}
+                                    <div class="leather-silhouette silhouette-belt silhouette-small"></div>
+                                    {% elif design.article.category == 'Handbags' %}
+                                    <div class="leather-silhouette silhouette-handbag silhouette-small"></div>
+                                    {% elif design.article.category == 'Card Holders' %}
+                                    <div class="leather-silhouette silhouette-cardholder silhouette-small"></div>
+                                    {% elif design.article.category == 'Keychains' %}
+                                    <div class="leather-silhouette silhouette-keychain silhouette-small"></div>
+                                    {% elif design.article.category == 'Pouches' %}
+                                    <div class="leather-silhouette silhouette-pouch silhouette-small"></div>
+                                    {% else %}
+                                    <div class="leather-silhouette silhouette-wallet silhouette-small"></div>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                                <div class="mini-art-info">
+                                    <strong>{{ design.article.name }}</strong>
+                                    <span class="text-muted">Base ₹{{ design.article.base_price }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
