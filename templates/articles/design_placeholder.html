@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Design Studio - {{ article.name }} - LeatherCraft Designer{% endblock %}
+
+{% block content %}
+<section class="design-placeholder-section">
+    <div class="container">
+        <!-- Breadcrumbs -->
+        <nav class="detail-breadcrumb" aria-label="Breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="{% url 'article_list' %}">Articles</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="{% url 'article_detail' article.id %}">{{ article.name }}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">Design Studio</span>
+        </nav>
+
+        <div class="design-placeholder-card">
+            <!-- Studio Badge & Title -->
+            <div class="placeholder-header text-center">
+                <div class="studio-icon-badge">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <span class="section-badge">Phase 4 Upcoming</span>
+                <h1 class="placeholder-title">Design Studio: <span class="text-highlight">{{ article.name }}</span></h1>
+                <p class="placeholder-subtitle">
+                    You have selected <strong>{{ article.name }}</strong> ({{ article.category }}) for bespoke customization.
+                </p>
+            </div>
+
+            <!-- Studio Roadmap Preview Banner -->
+            <div class="studio-preview-box">
+                <div class="studio-notice-header">
+                    <span class="notice-icon">🎨</span>
+                    <h3 class="notice-title">Design Studio Coming Next in Phase 4</h3>
+                </div>
+                <p class="studio-notice-body">
+                    The interactive 2D Canvas Editor, custom dimensional controls (width, height, thickness), pocket placement configurator, thread SPI selectors, and live leather grain rendering will be unlocked in <strong>Phase 4</strong>.
+                </p>
+
+                <!-- Selected Article Quick Spec Summary -->
+                <div class="selected-article-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Article Template:</span>
+                        <span class="summary-value">{{ article.name }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Category:</span>
+                        <span class="summary-value">{{ article.category }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Standard Material:</span>
+                        <span class="summary-value">{{ article.material }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Base Starting Price:</span>
+                        <span class="summary-value price-highlight">₹{{ article.base_price }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="placeholder-actions text-center">
+                <a href="{% url 'article_detail' article.id %}" class="btn btn-outline btn-lg" id="btn-return-detail">
+                    <span>Back to Article Details</span>
+                </a>
+                <a href="{% url 'article_list' %}" class="btn btn-primary btn-lg" id="btn-browse-more">
+                    <span>Browse More Articles</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

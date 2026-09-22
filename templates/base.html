@@ -49,6 +49,9 @@
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
+                        <a href="{% url 'article_list' %}" class="nav-link {% if 'articles' in request.path %}active{% endif %}" id="nav-link-articles">Articles</a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" id="nav-link-dashboard">Dashboard</a>
                     </li>
                     <li class="nav-item">
@@ -113,7 +116,7 @@
                 <p class="footer-desc">
                     Empowering leather artisans, craftsmen, and small enterprise workshops with smart digital design and precise estimation tools.
                 </p>
-                <div class="footer-badge">Django Authentication Active</div>
+                <div class="footer-badge">Database Catalog Active</div>
             </div>
 
             <div class="footer-links-col">
@@ -122,6 +125,7 @@
                     <li><a href="{% url 'home' %}">Home</a></li>
                     <li><a href="{% url 'about' %}">About Platform</a></li>
                     {% if user.is_authenticated %}
+                    <li><a href="{% url 'article_list' %}">Article Catalog</a></li>
                     <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
                     <li><a href="{% url 'profile' %}">Profile</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>

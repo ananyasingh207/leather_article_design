@@ -11,8 +11,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name='home'),
     path('about/', about_view, name='about'),
+    path('articles/', include('articles.urls')),
     path('', include('accounts.urls')),
 ]
+
 
 # Serve media files in development
 if settings.DEBUG:

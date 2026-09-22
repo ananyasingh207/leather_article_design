@@ -19,13 +19,14 @@
                 </div>
             </div>
             <div class="header-action-buttons">
-                <button type="button" class="btn btn-primary btn-lg" id="btn-create-design" onclick="alert('Design Studio Canvas will be activated in Phase 4.');">
+                <a href="{% url 'article_list' %}" class="btn btn-primary btn-lg" id="btn-browse-articles">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
                     </svg>
-                    <span>Create New Design</span>
-                </button>
+                    <span>Browse Articles</span>
+                </a>
                 <a href="{% url 'profile' %}" class="btn btn-outline btn-lg" id="btn-view-profile">View Profile</a>
             </div>
         </div>

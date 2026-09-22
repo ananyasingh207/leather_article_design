@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ article.name }} - LeatherCraft Designer{% endblock %}
+
+{% block content %}
+<section class="article-detail-section">
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <nav class="detail-breadcrumb" aria-label="Breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="{% url 'article_list' %}">Article Catalog</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">{{ article.name }}</span>
+        </nav>
+
+        <!-- Product Detail Card Grid -->
+        <div class="article-detail-card">
+            <div class="detail-grid">
+                <!-- Media Column -->
+                <div class="detail-media-col">
+                    <div class="detail-media-box">
+                        <span class="detail-category-badge">{{ article.category }}</span>
+                        {% if article.image %}
+                        <img src="{{ article.image.url }}" alt="{{ article.name }}" class="detail-main-img">
+                        {% else %}
+                        <!-- Visual Leather Silhouette Showcase -->
+                        <div class="detail-silhouette-stage">
+                            {% if article.category == 'Wallets' %}
+                            <div class="leather-silhouette silhouette-wallet silhouette-large"></div>
+                            {% elif article.category == 'Belts' %}
+                            <div class="leather-silhouette silhouette-belt silhouette-large"></div>
+                            {% elif article.category == 'Handbags' %}
+                            <div class="leather-silhouette silhouette-handbag silhouette-large"></div>
+                            {% elif article.category == 'Card Holders' %}
+                            <div class="leather-silhouette silhouette-cardholder silhouette-large"></div>
+                            {% elif article.category == 'Keychains' %}
+                            <div class="leather-silhouette silhouette-keychain silhouette-large"></div>
+                            {% elif article.category == 'Pouches' %}
+                            <div class="leather-silhouette silhouette-pouch silhouette-large"></div>
+                            {% else %}
+                            <div class="leather-silhouette silhouette-wallet silhouette-large"></div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Content & Specifications Column -->
+                <div class="detail-info-col">
+                    <div class="detail-header-group">
+                        <div class="detail-badges-row">
+                            <span class="detail-badge-category">{{ article.category }}</span>
+                            <span class="detail-badge-status">Customizable Template</span>
+                        </div>
+                        <h1 class="detail-article-title">{{ article.name }}</h1>
+                    </div>
+
+                    <!-- Price Block -->
+                    <div class="detail-price-card">
+                        <div class="price-header-text">
+                            <span class="price-title">Starting Base Price</span>
+                            <span class="price-sub">(Excludes custom hardware &amp; premium hides)</span>
+                        </div>
+                        <div class="detail-price-value">₹{{ article.base_price }}</div>
+                    </div>
+
+                    <!-- Material & Craft Details -->
+                    <div class="detail-specifications">
+                        <h3 class="specs-heading">Product Specifications</h3>
+                        <div class="specs-grid">
+                            <div class="spec-row">
+                                <span class="spec-key">Category</span>
+                                <span class="spec-val">{{ article.category }}</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-key">Primary Material</span>
+                                <span class="spec-val">{{ article.material }}</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-key">Template ID</span>
+                                <span class="spec-val">#ART-{{ article.id|stringformat:"04d" }}</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-key">Status</span>
+                                <span class="spec-val text-success">Ready for Customization</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="detail-description-box">
+                        <h3 class="desc-heading">Description &amp; Craftsmanship</h3>
+                        <p class="desc-content">{{ article.description }}</p>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="detail-actions-panel">
+                        <a href="{% url 'design_article' article.id %}" class="btn btn-primary btn-lg" id="btn-design-article-detail">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                            </svg>
+                            <span>Design This Article</span>
+                        </a>
+                        <a href="{% url 'article_list' %}" class="btn btn-outline btn-lg" id="btn-back-to-catalog">
+                            <span>Back to Catalog</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
