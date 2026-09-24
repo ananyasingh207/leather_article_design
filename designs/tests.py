@@ -292,3 +292,52 @@ class DesignStudioViewsTestCase(TestCase):
         url = reverse('design_detail', kwargs={'design_id': design.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+
+    def test_design_studio_interactive_controls_present(self):
+        """Test Phase 5 interactive controls, sliders, side switcher, and asset links in Design Studio."""
+        self.client.force_login(self.user_a)
+        url = reverse('design_create', kwargs={'article_id': self.article.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        # Check interactive sliders and buttons
+        self.assertContains(response, 'id="sliderPosX"')
+        self.assertContains(response, 'id="sliderPosY"')
+        self.assertContains(response, 'id="sliderRotation"')
+        self.assertContains(response, 'id="btnResetPreview"')
+        self.assertContains(response, 'id="tabViewFront"')
+        self.assertContains(response, 'id="tabViewBack"')
+        self.assertContains(response, 'id="tabViewSide"')
+
+        # Check canvas and category shape
+        self.assertContains(response, 'id="studioCanvasStage"')
+        self.assertContains(response, 'shape-wallets')
+        self.assertContains(response, 'design_studio.js')
+        self.assertContains(response, 'design_studio.css')
+
+    def test_design_studio_multiple_article_category_shapes(self):
+        """Test that different article categories render their respective category shape classes."""
+        self.client.force_login(self.user_a)
+
+        categories_to_test = [
+            (Article.CATEGORY_BELTS, 'shape-belts'),
+            (Article.CATEGORY_HANDBAGS, 'shape-handbags'),
+            (Article.CATEGORY_CARD_HOLDERS, 'shape-card-holders'),
+            (Article.CATEGORY_KEYCHAINS, 'shape-keychains'),
+            (Article.CATEGORY_POUCHES, 'shape-pouches'),
+            (Article.CATEGORY_LEATHER_COVERS, 'shape-leather-covers'),
+        ]
+
+        for cat, expected_shape_class in categories_to_test:
+            art = Article.objects.create(
+                name=f"Sample {cat}",
+                category=cat,
+                material="Top Grain Leather",
+                base_price=Decimal("900.00"),
+                description=f"Sample product for {cat}"
+            )
+            url = reverse('design_create', kwargs={'article_id': art.id})
+            resp = self.client.get(url)
+            self.assertEqual(resp.status_code, 200)
+            self.assertContains(resp, expected_shape_class)
+

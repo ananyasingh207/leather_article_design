@@ -3,6 +3,10 @@
 
 {% block title %}Design Studio - {{ article.name }} - LeatherCraft Designer{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/design_studio.css' %}?v=5.0">
+{% endblock %}
+
 {% block content %}
 <section class="design-studio-section">
     <div class="container">
@@ -20,10 +24,10 @@
         <!-- Studio Header -->
         <div class="studio-header-card">
             <div class="studio-header-content">
-                <span class="studio-header-badge">Design Studio — Phase 4</span>
+                <span class="studio-header-badge">Design Studio — Phase 5</span>
                 <h1 class="studio-header-title">Configure &amp; Customize: {{ article.name }}</h1>
                 <p class="studio-header-sub">
-                    Select your leather grade, dimensions, stitching accents, and optional embossed initials to design your bespoke piece.
+                    Select your leather grade, dimensions, stitching accents, and use the interactive live preview to inspect your bespoke design from every angle.
                 </p>
             </div>
             <div class="studio-article-quickinfo">
@@ -52,7 +56,7 @@
                         </div>
                         <div>
                             <h2 class="studio-panel-title">Design Parameters</h2>
-                            <p class="studio-panel-sub">Customize leather material, dimensions, and styling.</p>
+                            <p class="studio-panel-sub">Customize leather material, dimensions, and live styling.</p>
                         </div>
                     </div>
 
@@ -178,9 +182,9 @@
                             </div>
                         </div>
 
-                        <!-- Section 4: Embossing & Typography -->
+                        <!-- Section 4: Embossing & Interactive Typography -->
                         <div class="form-section-group">
-                            <h3 class="form-section-title">4. Embossed Custom Text (Optional)</h3>
+                            <h3 class="form-section-title">4. Embossed Custom Text &amp; Positioning</h3>
                             <div class="form-group">
                                 <label for="id_custom_text" class="form-label">Custom Text / Monogram</label>
                                 {{ form.custom_text }}
@@ -212,6 +216,34 @@
                                     {% endif %}
                                 </div>
                             </div>
+
+                            <!-- Interactive Live Position Sliders -->
+                            <div class="form-row-sliders">
+                                <div class="range-slider-group">
+                                    <div class="range-slider-header">
+                                        <label for="sliderPosX" class="range-slider-label">Horizontal (X)</label>
+                                        <span class="range-value-badge" id="badgePosX">X: 50%</span>
+                                    </div>
+                                    <input type="range" class="studio-range-slider" id="sliderPosX" min="10" max="90" value="50" aria-label="Horizontal text position">
+                                </div>
+
+                                <div class="range-slider-group">
+                                    <div class="range-slider-header">
+                                        <label for="sliderPosY" class="range-slider-label">Vertical (Y)</label>
+                                        <span class="range-value-badge" id="badgePosY">Y: 50%</span>
+                                    </div>
+                                    <input type="range" class="studio-range-slider" id="sliderPosY" min="15" max="85" value="50" aria-label="Vertical text position">
+                                </div>
+                            </div>
+
+                            <!-- Interactive Live Rotation Slider -->
+                            <div class="range-slider-group slider-full-width">
+                                <div class="range-slider-header">
+                                    <label for="sliderRotation" class="range-slider-label">Text Rotation Angle</label>
+                                    <span class="range-value-badge" id="badgeRotation">Rotation: 0°</span>
+                                </div>
+                                <input type="range" class="studio-range-slider" id="sliderRotation" min="-45" max="45" value="0" step="1" aria-label="Text rotation angle">
+                            </div>
                         </div>
 
                         <!-- Action Buttons -->
@@ -234,6 +266,62 @@
 
             <!-- Right Column: Product Reference & Real-Time Live Preview -->
             <div class="studio-preview-col">
+                <!-- Interactive CSS/HTML Live Canvas Preview -->
+                <div class="studio-card studio-live-swatch-panel">
+                    <div class="preview-panel-header">
+                        <span class="preview-panel-badge badge-live">Live Interactive Preview</span>
+                        <h3 class="preview-panel-title">Interactive Design Editor</h3>
+                    </div>
+
+                    <!-- View Side Selector Toolbar -->
+                    <div class="canvas-side-toolbar">
+                        <div class="side-selector-group" role="tablist" aria-label="Product view angle">
+                            <button type="button" class="btn-side-tab active" data-side="front" id="tabViewFront">Front View</button>
+                            <button type="button" class="btn-side-tab" data-side="back" id="tabViewBack">Back View</button>
+                            <button type="button" class="btn-side-tab" data-side="side" id="tabViewSide">Side / Depth</button>
+                        </div>
+                        <button type="button" class="btn-reset-preview" id="btnResetPreview" title="Reset temporary preview controls">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                                <path d="M3 3v5h5"></path>
+                            </svg>
+                            <span>Reset Preview</span>
+                        </button>
+                    </div>
+
+                    <!-- Dynamic Canvas Stage -->
+                    <div class="studio-canvas-stage shape-{{ article.category|slugify }}" id="studioCanvasStage" data-category="{{ article.category }}">
+                        <div class="article-preview-container" id="articlePreviewContainer">
+                            <div class="article-leather-body" id="articleLeatherBody">
+                                <div class="article-stitch-frame" id="articleStitchFrame">
+                                    <div class="article-watermark" id="articleWatermark">{{ article.category|upper }}</div>
+                                    <div class="live-emboss-element" id="liveEmbossElement">CUSTOM TEXT</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Property Readouts -->
+                    <div class="preview-readout-grid">
+                        <div class="readout-chip">
+                            <span class="readout-label">Color:</span>
+                            <span class="readout-val" id="readoutColor">Brown</span>
+                        </div>
+                        <div class="readout-chip">
+                            <span class="readout-label">Stitching:</span>
+                            <span class="readout-val" id="readoutStitching">Brown</span>
+                        </div>
+                        <div class="readout-chip">
+                            <span class="readout-label">Dimensions:</span>
+                            <span class="readout-val" id="readoutDimensions">-- x -- x -- cm</span>
+                        </div>
+                        <div class="readout-chip">
+                            <span class="readout-label">Finish:</span>
+                            <span class="readout-val" id="readoutFinish">Matte</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Reference Article Card -->
                 <div class="studio-card studio-reference-panel">
                     <div class="preview-panel-header">
@@ -276,176 +364,12 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Interactive CSS/HTML Live Swatch Preview -->
-                <div class="studio-card studio-live-swatch-panel">
-                    <div class="preview-panel-header">
-                        <span class="preview-panel-badge badge-live">Live Interactive Preview</span>
-                        <h3 class="preview-panel-title">Leather Swatch Simulation</h3>
-                    </div>
-
-                    <div class="swatch-preview-viewport">
-                        <!-- Dynamic Leather Piece Container -->
-                        <div class="leather-swatch-piece" id="previewLeatherPiece">
-                            <!-- Stitching Border Inner Frame -->
-                            <div class="stitching-border-frame" id="previewStitchingFrame">
-                                <!-- Article Silhouette Watermark -->
-                                <div class="swatch-watermark" id="previewWatermark">
-                                    <span>{{ article.category|upper }}</span>
-                                </div>
-                                <!-- Custom Monogram Embossed Text -->
-                                <div class="swatch-emboss-text" id="previewEmbossText">
-                                    CUSTOM TEXT
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Live Property Readouts -->
-                    <div class="preview-readout-grid">
-                        <div class="readout-chip">
-                            <span class="readout-label">Color:</span>
-                            <span class="readout-val" id="readoutColor">Brown</span>
-                        </div>
-                        <div class="readout-chip">
-                            <span class="readout-label">Stitching:</span>
-                            <span class="readout-val" id="readoutStitching">Brown</span>
-                        </div>
-                        <div class="readout-chip">
-                            <span class="readout-label">Dimensions:</span>
-                            <span class="readout-val" id="readoutDimensions">-- x -- x -- cm</span>
-                        </div>
-                        <div class="readout-chip">
-                            <span class="readout-label">Finish:</span>
-                            <span class="readout-val" id="readoutFinish">Matte</span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
 
-<!-- Studio Live Preview JavaScript -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    // Form Inputs
-    const colorSelect = document.getElementById('id_leather_color');
-    const stitchSelect = document.getElementById('id_stitching_color');
-    const finishSelect = document.getElementById('id_leather_finish');
-    const textInput = document.getElementById('id_custom_text');
-    const fontSelect = document.getElementById('id_font');
-    const sizeSelect = document.getElementById('id_text_size');
-    const widthInput = document.getElementById('id_width');
-    const heightInput = document.getElementById('id_height');
-    const depthInput = document.getElementById('id_depth');
-
-    // Preview DOM Elements
-    const leatherPiece = document.getElementById('previewLeatherPiece');
-    const stitchingFrame = document.getElementById('previewStitchingFrame');
-    const embossText = document.getElementById('previewEmbossText');
-    const readoutColor = document.getElementById('readoutColor');
-    const readoutStitching = document.getElementById('readoutStitching');
-    const readoutDimensions = document.getElementById('readoutDimensions');
-    const readoutFinish = document.getElementById('readoutFinish');
-
-    // Color Maps
-    const leatherColorMap = {
-        'Black': { bg: '#1c1c1c', border: '#111111', textShadow: 'rgba(255,255,255,0.15)' },
-        'Brown': { bg: '#5c3a21', border: '#3e2413', textShadow: 'rgba(0,0,0,0.4)' },
-        'Tan': { bg: '#c68b59', border: '#a56c3e', textShadow: 'rgba(0,0,0,0.3)' },
-        'Dark Brown': { bg: '#3b2214', border: '#26140a', textShadow: 'rgba(0,0,0,0.5)' },
-        'Red': { bg: '#8b261d', border: '#5e150f', textShadow: 'rgba(0,0,0,0.4)' },
-        'Blue': { bg: '#1c3b57', border: '#102436', textShadow: 'rgba(0,0,0,0.4)' }
-    };
-
-    const stitchColorMap = {
-        'Black': '#111111',
-        'White': '#f8f8f8',
-        'Brown': '#7a4b27',
-        'Tan': '#d9a066',
-        'Red': '#c0392b'
-    };
-
-    const fontStyleMap = {
-        'Classic': 'Cinzel, Georgia, serif',
-        'Modern': 'Inter, "Helvetica Neue", sans-serif',
-        'Elegant': '"Playfair Display", "Times New Roman", serif',
-        'Bold': 'Impact, "Arial Black", sans-serif'
-    };
-
-    function updatePreview() {
-        // 1. Leather Color & Finish
-        const selectedColor = colorSelect ? colorSelect.value : 'Brown';
-        const colorConfig = leatherColorMap[selectedColor] || leatherColorMap['Brown'];
-        
-        if (leatherPiece) {
-            leatherPiece.style.backgroundColor = colorConfig.bg;
-            leatherPiece.style.borderColor = colorConfig.border;
-
-            const selectedFinish = finishSelect ? finishSelect.value : 'Matte';
-            if (selectedFinish === 'Glossy') {
-                leatherPiece.style.boxShadow = 'inset 0 2px 10px rgba(255,255,255,0.25), 0 8px 24px rgba(0,0,0,0.35)';
-            } else if (selectedFinish === 'Textured') {
-                leatherPiece.style.boxShadow = 'inset 0 0 15px rgba(0,0,0,0.4), 0 6px 18px rgba(0,0,0,0.25)';
-            } else {
-                leatherPiece.style.boxShadow = '0 6px 18px rgba(0,0,0,0.25)';
-            }
-        }
-
-        if (readoutColor) readoutColor.textContent = selectedColor;
-        if (readoutFinish && finishSelect) readoutFinish.textContent = finishSelect.value;
-
-        // 2. Stitching Color
-        const selectedStitch = stitchSelect ? stitchSelect.value : 'Brown';
-        const stitchColor = stitchColorMap[selectedStitch] || '#7a4b27';
-        if (stitchingFrame) {
-            stitchingFrame.style.borderColor = stitchColor;
-        }
-        if (readoutStitching) readoutStitching.textContent = selectedStitch;
-
-        // 3. Custom Text, Font & Size
-        const customTextValue = textInput ? textInput.value.trim() : '';
-        const selectedFont = fontSelect ? fontSelect.value : 'Classic';
-        const selectedSize = sizeSelect ? sizeSelect.value : '18';
-
-        if (embossText) {
-            if (customTextValue) {
-                embossText.textContent = customTextValue;
-                embossText.style.opacity = '1';
-            } else {
-                embossText.textContent = '— NO TEXT EMBOSSED —';
-                embossText.style.opacity = '0.4';
-            }
-            embossText.style.fontFamily = fontStyleMap[selectedFont] || 'Cinzel, Georgia, serif';
-            embossText.style.fontSize = selectedSize + 'px';
-        }
-
-        // 4. Dimensions Readout
-        const w = widthInput && widthInput.value ? widthInput.value : '--';
-        const h = heightInput && heightInput.value ? heightInput.value : '--';
-        const d = depthInput && depthInput.value ? depthInput.value : '--';
-        if (readoutDimensions) {
-            readoutDimensions.textContent = `${w} × ${h} × ${d} cm`;
-        }
-    }
-
-    // Attach Event Listeners for real-time reactivity
-    const allInputs = [
-        colorSelect, stitchSelect, finishSelect,
-        textInput, fontSelect, sizeSelect,
-        widthInput, heightInput, depthInput
-    ];
-
-    allInputs.forEach(input => {
-        if (input) {
-            input.addEventListener('input', updatePreview);
-            input.addEventListener('change', updatePreview);
-        }
-    });
-
-    // Initial Trigger
-    updatePreview();
-});
-</script>
+{% block extra_js %}
+<script src="{% static 'js/design_studio.js' %}?v=5.2"></script>
 {% endblock %}
