@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Designs - LeatherCraft Designer{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <nav class="detail-breadcrumb" aria-label="Breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">My Designs</span>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="dashboard-header-card">
+            <div class="header-user-info">
+                <div class="user-avatar-large">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <div class="user-welcome-text">
+                    <span class="user-welcome-badge">Custom Portfolio</span>
+                    <h1 class="user-welcome-title">My Saved Designs</h1>
+                    <p class="user-welcome-sub">Inspect, edit, duplicate, and manage all your bespoke handcrafted configurations.</p>
+                </div>
+            </div>
+            <div class="header-action-buttons">
+                <a href="{% url 'article_list' %}" class="btn btn-primary btn-lg" id="btn-create-new-design">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Create New Design</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="dashboard-content-panel" style="margin-bottom: 2rem;">
+            <form method="get" action="{% url 'design_list' %}" class="design-filter-bar" id="designFilterForm" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <div class="search-input-group" style="flex: 2; min-width: 240px; position: relative;">
+                    <input type="text" name="q" id="search-input" value="{{ search_query }}" placeholder="Search by design name or article..." class="form-control" style="width: 100%; padding-left: 2.25rem;">
+                    <span style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--color-text-muted); pointer-events: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </span>
+                </div>
+
+                <div class="filter-select-group" style="flex: 1; min-width: 180px;">
+                    <select name="category" id="category-select" class="form-select" style="width: 100%;" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        {% for cat_val, cat_label in categories %}
+                        <option value="{{ cat_val }}" {% if selected_category == cat_val %}selected{% endif %}>{{ cat_label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="submit" class="btn btn-primary btn-md" id="btn-search-designs">
+                        <span>Search</span>
+                    </button>
+                    {% if search_query or selected_category %}
+                    <a href="{% url 'design_list' %}" class="btn btn-outline btn-md" id="btn-clear-filters">
+                        <span>Clear</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+        <!-- Designs Content Grid / Empty States -->
+        <div class="dashboard-content-panel">
+            <div class="panel-header">
+                <div>
+                    <h3 class="panel-title">Designs Portfolio</h3>
+                    <span class="panel-subtitle">
+                        {% if search_query or selected_category %}
+                        Showing {{ designs.count }} result{{ designs.count|pluralize }} for current filters
+                        {% else %}
+                        Total: {{ designs.count }} saved design{{ designs.count|pluralize }}
+                        {% endif %}
+                    </span>
+                </div>
+                <span class="panel-badge">{{ designs.count }} Item{{ designs.count|pluralize }}</span>
+            </div>
+
+            {% if designs %}
+            <div class="dashboard-designs-grid" id="designsGrid">
+                {% for design in designs %}
+                <div class="dashboard-design-card" id="design-card-{{ design.id }}">
+                    <!-- Live Visual Preview Thumbnail -->
+                    <div class="design-card-preview-mini">
+                        <div class="mini-swatch-box swatch-leather-{{ design.leather_color|slugify }} swatch-finish-{{ design.leather_finish|slugify }} view-{{ design.selected_side }}">
+                            <div class="mini-stitch-border frame-stitch-{{ design.stitching_color|slugify }}" style="position: relative; overflow: hidden; width: 100%; height: 100%;">
+                                {% if design.logo %}
+                                <div class="mini-logo-box" style="position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 22px; height: 16px; z-index: 5; pointer-events: none;">
+                                    <img src="{{ design.logo.url }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));">
+                                </div>
+                                {% endif %}
+                                <span class="mini-emboss-text font-family-{{ design.font|slugify }}" style="position: absolute; left: {{ design.position_x }}%; top: {{ design.position_y }}%; transform: translate(-50%, -50%) rotate({{ design.rotation }}deg); white-space: nowrap; max-width: 90%;">
+                                    {% if design.custom_text %}{{ design.custom_text }}{% else %}{{ design.article.category }}{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Design Card Details Body -->
+                    <div class="design-card-body">
+                        <div class="design-card-meta-top">
+                            <span class="category-pill">{{ design.article.category }}</span>
+                            <span class="design-date">{{ design.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <h4 class="design-card-name">{{ design.name }}</h4>
+                        <p class="design-card-article-ref">Article: <strong>{{ design.article.name }}</strong></p>
+
+                        <div class="design-specs-mini">
+                            <div class="spec-mini-item">
+                                <span class="spec-mini-k">Leather:</span>
+                                <span class="spec-mini-v">{{ design.leather_color }} ({{ design.leather_type }})</span>
+                            </div>
+                            <div class="spec-mini-item">
+                                <span class="spec-mini-k">Finish:</span>
+                                <span class="spec-mini-v">{{ design.leather_finish }}</span>
+                            </div>
+                            <div class="spec-mini-item">
+                                <span class="spec-mini-k">Dimensions:</span>
+                                <span class="spec-mini-v">{{ design.width }} × {{ design.height }} × {{ design.depth }} cm</span>
+                            </div>
+                            <div class="spec-mini-item">
+                                <span class="spec-mini-k">Est. Cost:</span>
+                                <span class="spec-mini-v price-highlight" style="font-weight: 700; color: var(--color-leather-primary);">₹{{ design.estimated_total }}</span>
+                            </div>
+                            <div class="spec-mini-item">
+                                <span class="spec-mini-k">Last Modified:</span>
+                                <span class="spec-mini-v">{{ design.updated_at|date:"M d, Y - H:i" }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Card Action Buttons: View, Edit, Duplicate, Delete -->
+                        <div class="design-card-actions-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: auto;">
+                            <a href="{% url 'design_detail' design.id %}" class="btn btn-outline btn-sm" id="btn-view-design-{{ design.id }}" style="justify-content: center;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <span>View</span>
+                            </a>
+                            <a href="{% url 'design_edit' design.id %}" class="btn btn-outline btn-sm" id="btn-edit-design-{{ design.id }}" style="justify-content: center;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                <span>Edit</span>
+                            </a>
+                            <form method="post" action="{% url 'design_duplicate' design.id %}" style="margin: 0; display: flex;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline btn-sm" id="btn-duplicate-design-{{ design.id }}" style="width: 100%; justify-content: center;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                    <span>Duplicate</span>
+                                </button>
+                            </form>
+                            <a href="{% url 'design_delete' design.id %}" class="btn btn-outline btn-sm btn-outline-danger" id="btn-delete-design-{{ design.id }}" style="justify-content: center;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                <span>Delete</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% elif total_designs_count == 0 %}
+            <!-- Empty state when user has no designs at all -->
+            <div class="empty-state-box">
+                <div class="empty-state-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <h4 class="empty-state-title">No Custom Designs Yet</h4>
+                <p class="empty-state-desc">You haven't configured any leather articles yet. Browse our article catalog and personalize dimensions, leather textures, colors, and monogramming.</p>
+                <div class="empty-state-actions">
+                    <a href="{% url 'article_list' %}" class="btn btn-primary btn-md" id="btn-create-first-design">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Create Your First Design</span>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <!-- Filter yielded no results -->
+            <div class="empty-state-box">
+                <div class="empty-state-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <h4 class="empty-state-title">No Designs Match Your Search</h4>
+                <p class="empty-state-desc">No designs found for "{{ search_query }}"{% if selected_category %} in category "{{ selected_category }}"{% endif %}. Try resetting your search or filter options.</p>
+                <div class="empty-state-actions">
+                    <a href="{% url 'design_list' %}" class="btn btn-outline btn-md" id="btn-empty-clear-filters">
+                        <span>Clear All Filters</span>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

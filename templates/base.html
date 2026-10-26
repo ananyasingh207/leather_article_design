@@ -52,6 +52,9 @@
                         <a href="{% url 'article_list' %}" class="nav-link {% if 'articles' in request.path %}active{% endif %}" id="nav-link-articles">Articles</a>
                     </li>
                     <li class="nav-item">
+                        <a href="{% url 'design_list' %}" class="nav-link {% if 'designs' in request.path %}active{% endif %}" id="nav-link-designs">My Designs</a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" id="nav-link-dashboard">Dashboard</a>
                     </li>
                     <li class="nav-item">
@@ -126,6 +129,7 @@
                     <li><a href="{% url 'about' %}">About Platform</a></li>
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'article_list' %}">Article Catalog</a></li>
+                    <li><a href="{% url 'design_list' %}">My Designs</a></li>
                     <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
                     <li><a href="{% url 'profile' %}">Profile</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>

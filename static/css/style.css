@@ -205,6 +205,33 @@ img, svg {
     color: var(--color-white);
 }
 
+.btn-danger {
+    background-color: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+    border-color: #b91c1c;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.35);
+}
+
+.btn-outline-danger {
+    background-color: transparent;
+    border-color: #fca5a5;
+    color: #dc2626;
+}
+
+.btn-outline-danger:hover {
+    background-color: #fee2e2;
+    border-color: #dc2626;
+    color: #991b1b;
+}
+
 /* Badges */
 .section-badge {
     display: inline-block;

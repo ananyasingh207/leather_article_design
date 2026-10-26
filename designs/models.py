@@ -93,6 +93,17 @@ class Design(models.Model):
         (32, '32 pt'),
     ]
 
+    # Product View Side Choices
+    SIDE_FRONT = 'front'
+    SIDE_BACK = 'back'
+    SIDE_SIDE = 'side'
+
+    SIDE_CHOICES = [
+        (SIDE_FRONT, 'Front View'),
+        (SIDE_BACK, 'Back View'),
+        (SIDE_SIDE, 'Side / Depth'),
+    ]
+
     # Relationships
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -158,6 +169,12 @@ class Design(models.Model):
         default=STITCH_BROWN,
         help_text="Color of the edge and structural stitching"
     )
+    logo = models.ImageField(
+        upload_to='designs/logos/',
+        blank=True,
+        null=True,
+        help_text="Optional custom logo/branding image (PNG, JPEG)"
+    )
     custom_text = models.CharField(
         max_length=100,
         blank=True,
@@ -177,6 +194,29 @@ class Design(models.Model):
         help_text="Font size in points for custom text"
     )
 
+    # Live Preview Positioning & View Side
+    position_x = models.IntegerField(
+        default=50,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        help_text="Horizontal text position percentage (0-100)"
+    )
+    position_y = models.IntegerField(
+        default=50,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        help_text="Vertical text position percentage (0-100)"
+    )
+    rotation = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(-180), MaxValueValidator(180)],
+        help_text="Text rotation angle in degrees (-180 to 180)"
+    )
+    selected_side = models.CharField(
+        max_length=10,
+        choices=SIDE_CHOICES,
+        default=SIDE_FRONT,
+        help_text="Selected product side view"
+    )
+
     # Timestamps
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -194,3 +234,24 @@ class Design(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.article.name}) - {self.user.username}"
+
+    @property
+    def cost_breakdown(self):
+        """
+        Calculates and returns the authoritative cost estimation breakdown dictionary.
+        """
+        from .services import calculate_design_cost
+        return calculate_design_cost(
+            base_price=self.article.base_price,
+            leather_type=self.leather_type,
+            stitching_color=self.stitching_color,
+            custom_text=self.custom_text
+        )
+
+    @property
+    def estimated_total(self):
+        """
+        Returns the authoritative estimated total price as Decimal.
+        """
+        return self.cost_breakdown['total_estimate']
+

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Design Studio - {{ article.name }} - LeatherCraft Designer{% endblock %}
+{% block title %}{% if is_edit %}Edit {{ design.name }}{% else %}Design Studio - {{ article.name }}{% endif %} - LeatherCraft Designer{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/design_studio.css' %}?v=5.0">
@@ -18,14 +18,22 @@
             <span class="breadcrumb-separator">/</span>
             <a href="{% url 'article_detail' article.id %}">{{ article.name }}</a>
             <span class="breadcrumb-separator">/</span>
+            {% if is_edit %}
+            <a href="{% url 'design_list' %}">My Designs</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="{% url 'design_detail' design.id %}">{{ design.name }}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">Edit Design</span>
+            {% else %}
             <span class="breadcrumb-current">Design Studio</span>
+            {% endif %}
         </nav>
 
         <!-- Studio Header -->
         <div class="studio-header-card">
             <div class="studio-header-content">
-                <span class="studio-header-badge">Design Studio — Phase 5</span>
-                <h1 class="studio-header-title">Configure &amp; Customize: {{ article.name }}</h1>
+                <span class="studio-header-badge">{% if is_edit %}Edit Custom Design — Phase 6{% else %}Design Studio — Phase 5{% endif %}</span>
+                <h1 class="studio-header-title">{% if is_edit %}Editing: {{ design.name }}{% else %}Configure &amp; Customize: {{ article.name }}{% endif %}</h1>
                 <p class="studio-header-sub">
                     Select your leather grade, dimensions, stitching accents, and use the interactive live preview to inspect your bespoke design from every angle.
                 </p>
@@ -60,8 +68,12 @@
                         </div>
                     </div>
 
-                    <form method="post" action="{% url 'design_create' article.id %}" novalidate id="designStudioForm" class="studio-form">
+                    <form method="post" action="{% if is_edit %}{% url 'design_edit' design.id %}{% else %}{% url 'design_create' article.id %}{% endif %}" enctype="multipart/form-data" novalidate id="designStudioForm" class="studio-form">
                         {% csrf_token %}
+                        {{ form.position_x }}
+                        {{ form.position_y }}
+                        {{ form.rotation }}
+                        {{ form.selected_side }}
 
                         {% if form.non_field_errors %}
                         <div class="alert alert-error mb-4">
@@ -246,6 +258,79 @@
                             </div>
                         </div>
 
+                        <!-- Section 5: Custom Branding & Logo (Phase 8) -->
+                        <div class="form-section-group" id="logoUploadSection">
+                            <h3 class="form-section-title">5. Custom Branding &amp; Logo</h3>
+                            <div class="form-group">
+                                <label for="id_logo" class="form-label">Brand Logo Image</label>
+                                {{ form.logo }}
+                                {% if form.logo.errors %}
+                                <div class="form-error-msg">
+                                    {% for error in form.logo.errors %}{{ error }}{% endfor %}
+                                </div>
+                                {% endif %}
+                                <span class="form-helper-text">Upload your custom logo or emblem (PNG or JPEG). Transparent PNG recommended.</span>
+                            </div>
+
+                            <!-- Current Logo Card (in edit mode or if design already has a logo) -->
+                            {% if is_edit and design.logo %}
+                            <div class="current-logo-card" id="currentLogoCard" style="display: flex; align-items: center; justify-content: space-between; background: var(--color-sand-50); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 0.75rem;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <img src="{{ design.logo.url }}" alt="Current Logo" id="currentLogoThumb" style="width: 38px; height: 38px; object-fit: contain; border-radius: 4px; border: 1px solid var(--color-border); background: #ffffff; padding: 2px;">
+                                    <div>
+                                        <span style="font-size: 0.85rem; font-weight: 600; display: block; color: var(--color-leather-dark);">Saved Logo Attached</span>
+                                        <span style="font-size: 0.75rem; color: var(--color-text-muted);">Select a file to replace, or check to remove.</span>
+                                    </div>
+                                </div>
+                                <div class="form-check" style="display: flex; align-items: center; gap: 0.4rem;">
+                                    {{ form.clear_logo }}
+                                    <label for="id_clear_logo" class="form-check-label" style="font-size: 0.85rem; color: var(--color-danger); cursor: pointer; margin-bottom: 0;">Remove Logo</label>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Client-side action to clear newly selected file -->
+                            <div id="newLogoActions" style="display: none; margin-top: 0.5rem; justify-content: flex-end;">
+                                <button type="button" class="btn btn-outline btn-sm" id="btnRemoveLogo" style="font-size: 0.8rem; padding: 0.25rem 0.6rem; color: var(--color-danger); border-color: var(--color-danger);">
+                                    Clear Selected File
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Section 6: Estimated Cost Breakdown (Phase 7) -->
+                        <div class="form-section-group cost-estimator-group" id="costEstimatorPanel" data-base-price="{{ article.base_price }}">
+                            <div class="cost-estimator-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                <h3 class="form-section-title" style="margin-bottom: 0;">6. Estimated Cost Breakdown</h3>
+                                <span class="cost-estimate-badge" style="background-color: var(--color-sand-100); color: var(--color-leather-primary); font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; text-transform: uppercase;">Live Estimate</span>
+                            </div>
+
+                            <div class="cost-breakdown-card" style="background: var(--color-sand-50); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.25rem;">
+                                <div class="cost-line-item" style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                                    <span class="cost-label" style="color: var(--color-text-muted);">Base Article Price:</span>
+                                    <span class="cost-value" id="costBasePrice" style="font-weight: 600;">₹{{ cost_estimate.base_price|default:article.base_price }}</span>
+                                </div>
+                                <div class="cost-line-item" style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                                    <span class="cost-label" style="color: var(--color-text-muted);">Leather Surcharge (<span id="costLeatherLabel">Full Grain Leather</span>):</span>
+                                    <span class="cost-value" id="costLeatherSurcharge" style="font-weight: 600;">+₹{{ cost_estimate.leather_surcharge|default:'150.00' }}</span>
+                                </div>
+                                <div class="cost-line-item" style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                                    <span class="cost-label" style="color: var(--color-text-muted);">Stitching Accent Surcharge (<span id="costStitchingLabel">Brown</span>):</span>
+                                    <span class="cost-value" id="costStitchingSurcharge" style="font-weight: 600;">+₹{{ cost_estimate.stitching_surcharge|default:'50.00' }}</span>
+                                </div>
+                                <div class="cost-line-item" style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">
+                                    <span class="cost-label" style="color: var(--color-text-muted);">Custom Monogram Surcharge:</span>
+                                    <span class="cost-value" id="costCustomTextSurcharge" style="font-weight: 600;">+₹{{ cost_estimate.custom_text_surcharge|default:'0.00' }}</span>
+                                </div>
+                                <div class="cost-line-total" style="display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--color-border); padding-top: 0.75rem; margin-top: 0.5rem;">
+                                    <div>
+                                        <span style="font-weight: 700; font-size: 1.05rem; color: var(--color-leather-dark);">Estimated Total:</span>
+                                        <span style="display: block; font-size: 0.75rem; color: var(--color-text-muted); font-style: italic;">* Note: Estimated price for reference only</span>
+                                    </div>
+                                    <span class="cost-total-amount price-highlight" id="costTotalAmount" style="font-size: 1.35rem; font-weight: 800; color: var(--color-leather-primary);">₹{{ cost_estimate.total_estimate|default:article.base_price }}</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Action Buttons -->
                         <div class="studio-actions-footer">
                             <button type="submit" class="btn btn-primary btn-lg" id="btn-save-design">
@@ -254,9 +339,9 @@
                                     <polyline points="17 21 17 13 7 13 7 21"></polyline>
                                     <polyline points="7 3 7 8 15 8"></polyline>
                                 </svg>
-                                <span>Create Design</span>
+                                <span>{% if is_edit %}Save Changes{% else %}Create Design{% endif %}</span>
                             </button>
-                            <a href="{% url 'article_detail' article.id %}" class="btn btn-outline btn-lg" id="btn-cancel-design">
+                            <a href="{% if is_edit %}{% url 'design_detail' design.id %}{% else %}{% url 'article_detail' article.id %}{% endif %}" class="btn btn-outline btn-lg" id="btn-cancel-design">
                                 <span>Cancel</span>
                             </a>
                         </div>
@@ -294,7 +379,9 @@
                         <div class="article-preview-container" id="articlePreviewContainer">
                             <div class="article-leather-body" id="articleLeatherBody">
                                 <div class="article-stitch-frame" id="articleStitchFrame">
-                                    <div class="article-watermark" id="articleWatermark">{{ article.category|upper }}</div>
+                                    <div class="live-logo-container" id="liveLogoContainer" style="{% if not design.logo %}display: none;{% endif %}">
+                                        <img id="liveLogoElement" src="{% if design.logo %}{{ design.logo.url }}{% endif %}" alt="Branding Logo" class="preview-logo-img">
+                                    </div>
                                     <div class="live-emboss-element" id="liveEmbossElement">CUSTOM TEXT</div>
                                 </div>
                             </div>
@@ -318,6 +405,10 @@
                         <div class="readout-chip">
                             <span class="readout-label">Finish:</span>
                             <span class="readout-val" id="readoutFinish">Matte</span>
+                        </div>
+                        <div class="readout-chip readout-cost-highlight" style="background-color: var(--color-sand-100); border-color: var(--color-sand-300);">
+                            <span class="readout-label" style="font-weight: 700; color: var(--color-leather-dark);">Est. Cost:</span>
+                            <span class="readout-val price-highlight" id="readoutEstimatedCost" style="font-weight: 800; color: var(--color-leather-primary);">₹{{ cost_estimate.total_estimate|default:article.base_price }}</span>
                         </div>
                     </div>
                 </div>

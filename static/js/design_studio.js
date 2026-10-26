@@ -31,6 +31,16 @@
         'Bold': 'Impact, "Arial Black", sans-serif'
     };
 
+    // Phase 7: Cost Estimation Surcharge Constants
+    const LEATHER_SURCHARGES = {
+        'Full Grain Leather': 150.00,
+        'Top Grain Leather': 100.00,
+        'Genuine Leather': 50.00,
+        'Suede Leather': 100.00
+    };
+    const SPECIAL_STITCHING_SURCHARGE = 50.00;
+    const CUSTOM_TEXT_SURCHARGE = 25.00;
+
     // Centralized Live Preview State Object
     const previewState = {
         color: 'Brown',
@@ -61,7 +71,13 @@
         textSize: '18',
         width: '11.5',
         height: '9.0',
-        depth: '2.0'
+        depth: '2.0',
+        positionX: 50,
+        positionY: 50,
+        rotation: 0,
+        side: 'front',
+        logoUrl: '',
+        clearLogo: false
     };
 
     // DOM Elements Cache
@@ -81,6 +97,10 @@
             widthInput: document.getElementById('id_width'),
             heightInput: document.getElementById('id_height'),
             depthInput: document.getElementById('id_depth'),
+            posXInput: document.getElementById('id_position_x'),
+            posYInput: document.getElementById('id_position_y'),
+            rotationInput: document.getElementById('id_rotation'),
+            sideInput: document.getElementById('id_selected_side'),
 
             // Interactive Sliders & Badges
             sliderPosX: document.getElementById('sliderPosX'),
@@ -105,7 +125,27 @@
             readoutColor: document.getElementById('readoutColor'),
             readoutStitching: document.getElementById('readoutStitching'),
             readoutDimensions: document.getElementById('readoutDimensions'),
-            readoutFinish: document.getElementById('readoutFinish')
+            readoutFinish: document.getElementById('readoutFinish'),
+
+            // Phase 7: Cost Estimator Panel & Readouts
+            costPanel: document.getElementById('costEstimatorPanel'),
+            costBasePrice: document.getElementById('costBasePrice'),
+            costLeatherLabel: document.getElementById('costLeatherLabel'),
+            costLeatherSurcharge: document.getElementById('costLeatherSurcharge'),
+            costStitchingLabel: document.getElementById('costStitchingLabel'),
+            costStitchingSurcharge: document.getElementById('costStitchingSurcharge'),
+            costCustomTextSurcharge: document.getElementById('costCustomTextSurcharge'),
+            costTotalAmount: document.getElementById('costTotalAmount'),
+            readoutEstimatedCost: document.getElementById('readoutEstimatedCost'),
+
+            // Phase 8: Logo Upload & Controls
+            logoInput: document.getElementById('id_logo'),
+            clearLogoCheckbox: document.getElementById('id_clear_logo'),
+            btnRemoveLogo: document.getElementById('btnRemoveLogo'),
+            newLogoActions: document.getElementById('newLogoActions'),
+            currentLogoCard: document.getElementById('currentLogoCard'),
+            liveLogoContainer: document.getElementById('liveLogoContainer'),
+            liveLogoElement: document.getElementById('liveLogoElement')
         };
     }
 
@@ -124,6 +164,21 @@
         if (elements.widthInput) initialFormValues.width = elements.widthInput.value;
         if (elements.heightInput) initialFormValues.height = elements.heightInput.value;
         if (elements.depthInput) initialFormValues.depth = elements.depthInput.value;
+        if (elements.posXInput && elements.posXInput.value !== '') {
+            initialFormValues.positionX = parseInt(elements.posXInput.value, 10) || 50;
+        }
+        if (elements.posYInput && elements.posYInput.value !== '') {
+            initialFormValues.positionY = parseInt(elements.posYInput.value, 10) || 50;
+        }
+        if (elements.rotationInput && elements.rotationInput.value !== '') {
+            initialFormValues.rotation = parseInt(elements.rotationInput.value, 10) || 0;
+        }
+        if (elements.sideInput && elements.sideInput.value !== '') {
+            initialFormValues.side = elements.sideInput.value || 'front';
+        }
+        if (elements.liveLogoElement && elements.liveLogoElement.getAttribute('src')) {
+            initialFormValues.logoUrl = elements.liveLogoElement.getAttribute('src');
+        }
     }
 
     /**
@@ -238,6 +293,9 @@
      */
     function updateSide(sideName) {
         previewState.side = sideName;
+        if (elements.sideInput) {
+            elements.sideInput.value = sideName;
+        }
 
         if (elements.canvasStage) {
             elements.canvasStage.classList.remove('view-front', 'view-back', 'view-side');
@@ -260,6 +318,57 @@
     }
 
     /**
+     * Phase 7: Recalculates cost estimate breakdown and updates live display.
+     */
+    function updateCostEstimate() {
+        if (!elements.costPanel) return;
+
+        const basePrice = parseFloat(elements.costPanel.getAttribute('data-base-price')) || 0.00;
+
+        // Leather type surcharge
+        const leatherType = elements.typeSelect ? elements.typeSelect.value : 'Full Grain Leather';
+        const leatherSurcharge = LEATHER_SURCHARGES[leatherType] !== undefined ? LEATHER_SURCHARGES[leatherType] : 0.00;
+
+        // Stitching surcharge: ₹50 when differing from 'Black', otherwise ₹0
+        const stitchingColor = elements.stitchSelect ? elements.stitchSelect.value : 'Black';
+        const isSpecialStitching = stitchingColor.trim().toLowerCase() !== 'black';
+        const stitchingSurcharge = isSpecialStitching ? SPECIAL_STITCHING_SURCHARGE : 0.00;
+
+        // Custom text surcharge: ₹25 when custom text is provided, otherwise ₹0
+        const customText = elements.textInput ? elements.textInput.value : '';
+        const hasCustomText = customText.trim().length > 0;
+        const customTextSurcharge = hasCustomText ? CUSTOM_TEXT_SURCHARGE : 0.00;
+
+        const totalEstimate = basePrice + leatherSurcharge + stitchingSurcharge + customTextSurcharge;
+
+        // Update breakdown elements
+        if (elements.costBasePrice) {
+            elements.costBasePrice.textContent = '₹' + basePrice.toFixed(2);
+        }
+        if (elements.costLeatherLabel) {
+            elements.costLeatherLabel.textContent = leatherType;
+        }
+        if (elements.costLeatherSurcharge) {
+            elements.costLeatherSurcharge.textContent = '+₹' + leatherSurcharge.toFixed(2);
+        }
+        if (elements.costStitchingLabel) {
+            elements.costStitchingLabel.textContent = stitchingColor;
+        }
+        if (elements.costStitchingSurcharge) {
+            elements.costStitchingSurcharge.textContent = stitchingSurcharge > 0 ? '+₹' + stitchingSurcharge.toFixed(2) : '₹0.00';
+        }
+        if (elements.costCustomTextSurcharge) {
+            elements.costCustomTextSurcharge.textContent = customTextSurcharge > 0 ? '+₹' + customTextSurcharge.toFixed(2) : '₹0.00';
+        }
+        if (elements.costTotalAmount) {
+            elements.costTotalAmount.textContent = '₹' + totalEstimate.toFixed(2);
+        }
+        if (elements.readoutEstimatedCost) {
+            elements.readoutEstimatedCost.textContent = '₹' + totalEstimate.toFixed(2);
+        }
+    }
+
+    /**
      * Master orchestrator function.
      */
     function updatePreview() {
@@ -267,6 +376,7 @@
         updateStitching();
         updateText();
         updateDimensions();
+        updateCostEstimate();
     }
 
     /**
@@ -285,17 +395,45 @@
         if (elements.heightInput && initialFormValues.height) elements.heightInput.value = initialFormValues.height;
         if (elements.depthInput && initialFormValues.depth) elements.depthInput.value = initialFormValues.depth;
 
+        // Hidden fields
+        if (elements.posXInput) elements.posXInput.value = initialFormValues.positionX;
+        if (elements.posYInput) elements.posYInput.value = initialFormValues.positionY;
+        if (elements.rotationInput) elements.rotationInput.value = initialFormValues.rotation;
+        if (elements.sideInput) elements.sideInput.value = initialFormValues.side;
+
         // 2. Reset Interactive Sliders & Badges
-        previewState.positionX = 50;
-        previewState.positionY = 50;
-        previewState.rotation = 0;
+        previewState.positionX = initialFormValues.positionX;
+        previewState.positionY = initialFormValues.positionY;
+        previewState.rotation = initialFormValues.rotation;
 
-        if (elements.sliderPosX) elements.sliderPosX.value = 50;
-        if (elements.sliderPosY) elements.sliderPosY.value = 50;
-        if (elements.sliderRotation) elements.sliderRotation.value = 0;
+        if (elements.sliderPosX) elements.sliderPosX.value = initialFormValues.positionX;
+        if (elements.sliderPosY) elements.sliderPosY.value = initialFormValues.positionY;
+        if (elements.sliderRotation) elements.sliderRotation.value = initialFormValues.rotation;
 
-        // 3. Reset to Front View
-        updateSide('front');
+        // Phase 8: Reset Logo Upload & Preview
+        if (elements.logoInput) elements.logoInput.value = '';
+        if (elements.newLogoActions) elements.newLogoActions.style.display = 'none';
+        if (elements.clearLogoCheckbox) elements.clearLogoCheckbox.checked = false;
+        if (initialFormValues.logoUrl) {
+            if (elements.liveLogoElement) {
+                elements.liveLogoElement.src = initialFormValues.logoUrl;
+                elements.liveLogoElement.style.display = 'block';
+            }
+            if (elements.liveLogoContainer) {
+                elements.liveLogoContainer.style.display = 'flex';
+            }
+        } else {
+            if (elements.liveLogoElement) {
+                elements.liveLogoElement.src = '';
+                elements.liveLogoElement.style.display = 'none';
+            }
+            if (elements.liveLogoContainer) {
+                elements.liveLogoContainer.style.display = 'none';
+            }
+        }
+
+        // 3. Reset to initial View Side
+        updateSide(initialFormValues.side || 'front');
 
         // 4. Re-sync previewState from restored form inputs and re-render
         readFormValues();
@@ -315,6 +453,18 @@
         if (elements.widthInput) previewState.width = parseFloat(elements.widthInput.value) || 12.0;
         if (elements.heightInput) previewState.height = parseFloat(elements.heightInput.value) || 9.0;
         if (elements.depthInput) previewState.depth = parseFloat(elements.depthInput.value) || 2.0;
+        if (elements.posXInput && elements.posXInput.value !== '') {
+            previewState.positionX = parseInt(elements.posXInput.value, 10);
+        }
+        if (elements.posYInput && elements.posYInput.value !== '') {
+            previewState.positionY = parseInt(elements.posYInput.value, 10);
+        }
+        if (elements.rotationInput && elements.rotationInput.value !== '') {
+            previewState.rotation = parseInt(elements.rotationInput.value, 10);
+        }
+        if (elements.sideInput && elements.sideInput.value !== '') {
+            previewState.side = elements.sideInput.value;
+        }
     }
 
     /**
@@ -338,8 +488,14 @@
         // Read active form values
         readFormValues();
 
+        // Sync slider controls to initial/loaded state
+        if (elements.sliderPosX) elements.sliderPosX.value = previewState.positionX;
+        if (elements.sliderPosY) elements.sliderPosY.value = previewState.positionY;
+        if (elements.sliderRotation) elements.sliderRotation.value = previewState.rotation;
+
         // Attach event listeners to standard form controls
         const formControls = [
+            elements.typeSelect,
             elements.colorSelect,
             elements.finishSelect,
             elements.stitchSelect,
@@ -368,6 +524,7 @@
         if (elements.sliderPosX) {
             elements.sliderPosX.addEventListener('input', (e) => {
                 previewState.positionX = parseInt(e.target.value, 10);
+                if (elements.posXInput) elements.posXInput.value = previewState.positionX;
                 updateText();
             });
         }
@@ -375,6 +532,7 @@
         if (elements.sliderPosY) {
             elements.sliderPosY.addEventListener('input', (e) => {
                 previewState.positionY = parseInt(e.target.value, 10);
+                if (elements.posYInput) elements.posYInput.value = previewState.positionY;
                 updateText();
             });
         }
@@ -382,6 +540,7 @@
         if (elements.sliderRotation) {
             elements.sliderRotation.addEventListener('input', (e) => {
                 previewState.rotation = parseInt(e.target.value, 10);
+                if (elements.rotationInput) elements.rotationInput.value = previewState.rotation;
                 updateText();
             });
         }
@@ -406,8 +565,92 @@
             });
         }
 
-        // Initial render
-        updateSide('front');
+        // Phase 8: Logo Upload & Live Preview Event Listeners
+        if (elements.logoInput) {
+            elements.logoInput.addEventListener('change', (e) => {
+                const files = e.target.files;
+                if (files && files[0]) {
+                    const file = files[0];
+                    // Validate file type
+                    if (file.type.match(/^image\/(png|jpeg|jpg)$/i) || file.name.match(/\.(png|jpe?g)$/i)) {
+                        const reader = new FileReader();
+                        reader.onload = function (evt) {
+                            if (elements.liveLogoElement) {
+                                elements.liveLogoElement.src = evt.target.result;
+                                elements.liveLogoElement.style.display = 'block';
+                            }
+                            if (elements.liveLogoContainer) {
+                                elements.liveLogoContainer.style.display = 'flex';
+                            }
+                        };
+                        reader.readAsDataURL(file);
+
+                        if (elements.newLogoActions) {
+                            elements.newLogoActions.style.display = 'flex';
+                        }
+                        if (elements.clearLogoCheckbox) {
+                            elements.clearLogoCheckbox.checked = false;
+                        }
+                    }
+                }
+            });
+        }
+
+        // Button to clear newly chosen logo file
+        if (elements.btnRemoveLogo) {
+            elements.btnRemoveLogo.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (elements.logoInput) elements.logoInput.value = '';
+                if (elements.newLogoActions) elements.newLogoActions.style.display = 'none';
+
+                if (initialFormValues.logoUrl && (!elements.clearLogoCheckbox || !elements.clearLogoCheckbox.checked)) {
+                    if (elements.liveLogoElement) {
+                        elements.liveLogoElement.src = initialFormValues.logoUrl;
+                        elements.liveLogoElement.style.display = 'block';
+                    }
+                    if (elements.liveLogoContainer) {
+                        elements.liveLogoContainer.style.display = 'flex';
+                    }
+                } else {
+                    if (elements.liveLogoElement) {
+                        elements.liveLogoElement.src = '';
+                        elements.liveLogoElement.style.display = 'none';
+                    }
+                    if (elements.liveLogoContainer) {
+                        elements.liveLogoContainer.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // Checkbox to remove existing saved logo
+        if (elements.clearLogoCheckbox) {
+            elements.clearLogoCheckbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    if (elements.logoInput) elements.logoInput.value = '';
+                    if (elements.newLogoActions) elements.newLogoActions.style.display = 'none';
+                    if (elements.liveLogoElement) {
+                        elements.liveLogoElement.style.display = 'none';
+                    }
+                    if (elements.liveLogoContainer) {
+                        elements.liveLogoContainer.style.display = 'none';
+                    }
+                } else {
+                    if (initialFormValues.logoUrl) {
+                        if (elements.liveLogoElement) {
+                            elements.liveLogoElement.src = initialFormValues.logoUrl;
+                            elements.liveLogoElement.style.display = 'block';
+                        }
+                        if (elements.liveLogoContainer) {
+                            elements.liveLogoContainer.style.display = 'flex';
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initial render with loaded side and preview settings
+        updateSide(previewState.side || 'front');
         updatePreview();
     }
 
