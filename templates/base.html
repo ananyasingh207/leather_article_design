@@ -60,7 +60,15 @@
                     <li class="nav-item">
                         <a href="{% url 'profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" id="nav-link-profile">Profile</a>
                     </li>
+                    {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a href="{% url 'admin_dashboard' %}" class="nav-link nav-link-admin {% if request.resolver_match.url_name == 'admin_dashboard' or 'admin-dashboard' in request.path %}active{% endif %}" id="nav-link-admin-dashboard">
+                            <span class="nav-staff-badge">Staff</span> Admin
+                        </a>
+                    </li>
                     {% endif %}
+                    {% endif %}
+
                 </ul>
 
                 <div class="nav-actions">
@@ -132,7 +140,11 @@
                     <li><a href="{% url 'design_list' %}">My Designs</a></li>
                     <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
                     <li><a href="{% url 'profile' %}">Profile</a></li>
+                    {% if user.is_staff %}
+                    <li><a href="{% url 'admin_dashboard' %}" id="footer-link-admin-dashboard">Admin Dashboard</a></li>
+                    {% endif %}
                     <li><a href="{% url 'logout' %}">Logout</a></li>
+
                     {% else %}
                     <li><a href="{% url 'login' %}">User Login</a></li>
                     <li><a href="{% url 'register' %}">Create Account</a></li>

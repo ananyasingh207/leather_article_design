@@ -96,3 +96,36 @@ def profile_view(request):
     return render(request, 'profile.html', context)
 
 
+from django.contrib.auth.models import User
+from django.contrib.admin.views.decorators import staff_member_required
+from articles.models import Article
+
+
+@staff_member_required(login_url='login')
+def admin_dashboard_view(request):
+    """
+    Phase 10 Staff Admin Dashboard view:
+    Restricted to authenticated Django staff members.
+    Displays summary counts for registered users, articles, and saved designs,
+    along with recent record listings and direct links to Django's built-in /admin/.
+    """
+    total_users_count = User.objects.count()
+    total_articles_count = Article.objects.count()
+    total_designs_count = Design.objects.count()
+
+    recent_users = User.objects.order_by('-date_joined')[:5]
+    recent_articles = Article.objects.order_by('-created_at')[:5]
+    recent_designs = Design.objects.select_related('user', 'article').order_by('-created_at')[:5]
+
+    context = {
+        'total_users_count': total_users_count,
+        'total_articles_count': total_articles_count,
+        'total_designs_count': total_designs_count,
+        'recent_users': recent_users,
+        'recent_articles': recent_articles,
+        'recent_designs': recent_designs,
+    }
+    return render(request, 'admin_dashboard.html', context)
+
+
+
