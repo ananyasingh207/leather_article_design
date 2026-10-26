@@ -226,21 +226,16 @@
                         <div class="detail-preview-box">
                             <div class="leather-swatch-piece swatch-leather-{{ design.leather_color|slugify }} swatch-finish-{{ design.leather_finish|slugify }} view-{{ design.selected_side }}">
                                 <div class="stitching-border-frame frame-stitch-{{ design.stitching_color|slugify }}" style="position: relative; overflow: hidden; width: 100%; height: 100%;">
-                                    <div class="swatch-watermark">
-                                        <span>{{ design.article.category|upper }}</span>
-                                    </div>
                                     {% if design.logo %}
                                     <div class="live-logo-container" id="detailLiveLogoContainer" style="position: absolute; left: 50%; top: 25%; transform: translate(-50%, -50%); max-width: 70px; max-height: 50px; display: flex; align-items: center; justify-content: center; z-index: 10; pointer-events: none;">
                                         <img src="{{ design.logo.url }}" alt="{{ design.name }} Logo" class="preview-logo-img" style="max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));">
                                     </div>
                                     {% endif %}
+                                    {% if design.custom_text %}
                                     <div class="swatch-emboss-text font-family-{{ design.font|slugify }}" style="font-size: {{ design.text_size }}px; position: absolute; left: {{ design.position_x }}%; top: {{ design.position_y }}%; transform: translate(-50%, -50%) rotate({{ design.rotation }}deg); white-space: nowrap; max-width: 90%;">
-                                        {% if design.custom_text %}
                                         {{ design.custom_text }}
-                                        {% else %}
-                                        <span class="text-muted" style="font-size: 14px; opacity: 0.5;">[ NO EMBOSSED TEXT ]</span>
-                                        {% endif %}
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

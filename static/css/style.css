@@ -3193,6 +3193,22 @@ img, svg {
     transition: font-size 0.2s ease, font-family 0.2s ease;
 }
 
+/* Only the front of a product preview carries branding. */
+.view-back .live-logo-container,
+.view-back .live-emboss-element,
+.view-back .swatch-emboss-text,
+.view-back .mini-logo-box,
+.view-back .mini-emboss-text,
+.view-back .swatch-watermark,
+.view-side .live-logo-container,
+.view-side .live-emboss-element,
+.view-side .swatch-emboss-text,
+.view-side .mini-logo-box,
+.view-side .mini-emboss-text,
+.view-side .swatch-watermark {
+    display: none !important;
+}
+
 /* Live Readout Chips */
 .preview-readout-grid {
     display: grid;
@@ -3485,6 +3501,5 @@ img, svg {
         width: 100%;
     }
 }
-
 
 

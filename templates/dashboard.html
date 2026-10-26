@@ -109,16 +109,16 @@
                 {% for design in recent_designs %}
                 <div class="dashboard-design-card">
                     <div class="design-card-preview-mini">
-                        <div class="mini-swatch-box swatch-leather-{{ design.leather_color|slugify }}">
+                        <div class="mini-swatch-box swatch-leather-{{ design.leather_color|slugify }} view-{{ design.selected_side }}">
                             <div class="mini-stitch-border frame-stitch-{{ design.stitching_color|slugify }}" style="position: relative; overflow: hidden; width: 100%; height: 100%;">
                                 {% if design.logo %}
                                 <div class="mini-logo-box" style="position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 22px; height: 16px; z-index: 5; pointer-events: none;">
                                     <img src="{{ design.logo.url }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));">
                                 </div>
                                 {% endif %}
-                                <span class="mini-emboss-text font-family-{{ design.font|slugify }}" style="position: absolute; left: {{ design.position_x }}%; top: {{ design.position_y }}%; transform: translate(-50%, -50%) rotate({{ design.rotation }}deg); white-space: nowrap; max-width: 90%;">
-                                    {% if design.custom_text %}{{ design.custom_text }}{% else %}{{ design.article.category }}{% endif %}
-                                </span>
+                                {% if design.custom_text %}
+                                <span class="mini-emboss-text font-family-{{ design.font|slugify }}" style="position: absolute; left: {{ design.position_x }}%; top: {{ design.position_y }}%; transform: translate(-50%, -50%) rotate({{ design.rotation }}deg); white-space: nowrap; max-width: 90%;">{{ design.custom_text }}</span>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
